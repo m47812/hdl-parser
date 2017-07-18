@@ -123,6 +123,7 @@
     <Compile Include="VHDL_Library_Manager\VHDL_Library_Manager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="grammar\vhdl.new.g4" />
     <None Include="Libraries\ieee\arith.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
