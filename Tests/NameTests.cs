@@ -58,8 +58,8 @@ namespace Tests
 
             var name2 = assign2.Target as VHDL.expression.name.SelectedName;
             Assert.IsNotNull(name2);
-            CheckName(name2.getPrefix(), file.Parent, "work");
-            CheckSelName(name2.getSuffix(), package, "p", decl1.Objects[0], "s");
+            CheckName(name2.Prefix, file.Parent, "work");
+            CheckSelName(name2.Suffix, package, "p", decl1.Objects[0], "s");
             Assert.AreEqual(name2.Referenced, decl1.Objects[0]);
         }
 
@@ -68,8 +68,8 @@ namespace Tests
         {
             var name = construct as VHDL.expression.name.SelectedName;
             Assert.IsNotNull(name);
-            CheckName(name.getPrefix(), prefixDecl, prefixId);
-            CheckName(name.getSuffix(), suffixDecl, suffixId);
+            CheckName(name.Prefix, prefixDecl, prefixId);
+            CheckName(name.Suffix, suffixDecl, suffixId);
         }
 
         [TestMethod]
