@@ -350,7 +350,7 @@ block_statement
   : label_colon BLOCK ( LPAREN expression RPAREN )? ( IS )?
     block_header
     block_declarative_part BEGIN
-    block_statement_part 
+    block_statement_part
     END BLOCK ( identifier )? SEMI
   ;
 
@@ -549,7 +549,7 @@ disconnection_specification
   ;
 
 discrete_range
-  : range
+  : range_decl
   | subtype_indication
   ;
 
@@ -724,7 +724,7 @@ formal_parameter_list
 
 formal_part
   : identifier
-   | identifier LPAREN explicit_range  RPAREN 
+   | identifier LPAREN explicit_range  RPAREN
   ;
 
 free_quantity_declaration
@@ -791,7 +791,7 @@ identifier_list
 if_statement
   : ( label_colon )? IF condition THEN
     sequence_of_statements
-    ( ELSIF condition THEN sequence_of_statements )* 
+    ( ELSIF condition THEN sequence_of_statements )*
     ( ELSE sequence_of_statements )?
     END IF ( identifier )? SEMI
   ;
@@ -843,11 +843,11 @@ interface_file_declaration
   : FILE identifier_list COLON subtype_indication
   ;
 
-interface_signal_list 
+interface_signal_list
   : interface_signal_declaration ( SEMI interface_signal_declaration )*
   ;
 
-interface_port_list 
+interface_port_list
   : interface_port_declaration ( SEMI interface_port_declaration )*
   ;
 
@@ -862,11 +862,11 @@ interface_quantity_declaration
 
 interface_port_declaration
   : identifier_list COLON signal_mode subtype_indication
-    ( BUS )?
+    ( BUS )? ( VARASGN expression )?
   ;
 
 interface_signal_declaration
-  : SIGNAL identifier_list COLON subtype_indication
+  : SIGNAL identifier_list COLON ( signal_mode )? subtype_indication
     ( BUS )? ( VARASGN expression )?
   ;
 
@@ -924,7 +924,7 @@ logical_operator
 loop_statement
   : ( label_colon )? ( iteration_scheme )?
     LOOP
-    sequence_of_statements 
+    sequence_of_statements
     END LOOP ( identifier )? SEMI
   ;
 
@@ -957,14 +957,14 @@ multiplying_operator
 // slice_name, and attribute_name, respectively)
 // (2.2.2004, e.f.)
 name
-  : selected_name  
+  : selected_name
   | name_part ( DOT name_part)*
   ;
 
 name_part
    : selected_name (name_attribute_part | name_function_call_or_indexed_part | name_slice_part)?
    ;
-   
+
 name_attribute_part
    : APOSTROPHE attribute_designator ( expression ( COMMA expression )* )?
    ;
@@ -974,7 +974,7 @@ name_function_call_or_indexed_part
    ;
 
 name_slice_part
-   : LPAREN explicit_range ( COMMA explicit_range )* RPAREN
+   : ( LPAREN explicit_range ( COMMA explicit_range )* RPAREN )+
    ;
 
 selected_name
@@ -1082,7 +1082,7 @@ physical_literal
 
 physical_type_definition
   : range_constraint UNITS base_unit_declaration
-    ( secondary_unit_declaration )* 
+    ( secondary_unit_declaration )*
     END UNITS ( identifier )?
   ;
 
@@ -1099,12 +1099,12 @@ port_map_aspect
   ;
 
 primary
-  : name
+  : literal
   | qualified_expression
   | LPAREN expression RPAREN
   | allocator
   | aggregate
-  | literal
+  | name
   ;
 
 primary_unit
@@ -1169,7 +1169,7 @@ process_statement
     ( LPAREN sensitivity_list RPAREN )? ( IS )?
     process_declarative_part
     BEGIN
-    process_statement_part 
+    process_statement_part
     END ( POSTPONED )? PROCESS ( identifier )? SEMI
   ;
 
@@ -1197,17 +1197,17 @@ quantity_specification
   : quantity_list COLON name
   ;
 
-range
+range_decl
   : explicit_range
   | name
   ;
 
 explicit_range
-  : simple_expression direction simple_expression
+  : simple_expression ( direction simple_expression )?
   ;
 
 range_constraint
-  : RANGE range
+  : RANGE range_decl
   ;
 
 record_nature_definition
@@ -1355,7 +1355,7 @@ simultaneous_alternative
 
 simultaneous_case_statement
   : ( label_colon )? CASE expression USE
-    ( simultaneous_alternative )+ 
+    ( simultaneous_alternative )+
     END CASE ( identifier )? SEMI
   ;
 
@@ -1370,7 +1370,7 @@ simultaneous_if_statement
 simultaneous_procedural_statement
   : ( label_colon )? PROCEDURAL ( IS )?
     procedural_declarative_part BEGIN
-    procedural_statement_part 
+    procedural_statement_part
     END PROCEDURAL ( identifier )? SEMI
   ;
 
@@ -1404,7 +1404,7 @@ subnature_declaration
   ;
 
 subnature_indication
-  : name ( index_constraint )? 
+  : name ( index_constraint )?
     ( TOLERANCE expression ACROSS expression THROUGH )?
   ;
 
@@ -1545,14 +1545,14 @@ variable_declaration
   ;
 
 wait_statement
-  : ( label_colon )? WAIT ( sensitivity_clause )? 
+  : ( label_colon )? WAIT ( sensitivity_clause )?
     ( condition_clause )? ( timeout_clause )? SEMI
   ;
 
 waveform
   : waveform_element ( COMMA waveform_element )*
   | UNAFFECTED
-  ;   
+  ;
 
 waveform_element
   : expression ( AFTER expression )?
@@ -1560,22 +1560,14 @@ waveform_element
 
 //------------------------------------------Lexer-----------------------------------------
 BASE_LITERAL
-   :  BINANRY_BASED_INTEGER
-   |  OCTAL_BASED_INTEGER
-   |  HEXA_BASED_INTEGER
-   ;
-
-BINANRY_BASED_INTEGER
-   : '2' '#' ('1' | '0' | '_')+ '#' (INTEGER)?
-   ;
-   
-OCTAL_BASED_INTEGER
-   : '8' '#' ('7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '#' (INTEGER)?
-   ;
-
-HEXA_BASED_INTEGER
-   : '16' '#' ( 'f' |'e' |'d' |'c' |'b' |'a' | 'F' |'E' |'D' |'C' |'B' |'A' | '9' | '8' | '7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '#' (INTEGER)?
-   ;
+// INTEGER must be checked to be between and including 2 and 16 (included) i.e.
+// INTEGER >=2 and INTEGER <=16
+// A Based integer (a number without a . such as 3) should not have a negative exponent
+// A Based fractional number with a . i.e. 3.0 may have a negative exponent
+// These should be checked in the Visitor/Listener whereby an appropriate error message
+// should be given
+:  INTEGER '#' BASED_INTEGER ('.'BASED_INTEGER)? '#' (EXPONENT)?
+;
 
 BIT_STRING_LITERAL
   : BIT_STRING_LITERAL_BINARY
@@ -1584,24 +1576,24 @@ BIT_STRING_LITERAL
   ;
 
 BIT_STRING_LITERAL_BINARY
-    :   ('b'|'B') '\"' ('1' | '0' | '_')+ '\"'
+    :   ('b'|'B') '"' ('1' | '0' | '_')+ '"'
     ;
 
 BIT_STRING_LITERAL_OCTAL
-    :   ('o'|'O') '\"' ('7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '\"'
+    :   ('o'|'O') '"' ('7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '"'
     ;
 
 BIT_STRING_LITERAL_HEX
-    :   ('x'|'X') '\"' ( 'f' |'e' |'d' |'c' |'b' |'a' | 'F' |'E' |'D' |'C' |'B' |'A' | '9' | '8' | '7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '\"'
+    :   ('x'|'X') '"' ( 'f' |'e' |'d' |'c' |'b' |'a' | 'F' |'E' |'D' |'C' |'B' |'A' | '9' | '8' | '7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '"'
     ;
 
 REAL_LITERAL
    :    INTEGER '.' INTEGER  ( EXPONENT )?;
 
 BASIC_IDENTIFIER
-   :   LETTER ( '_' | LETTER | DIGIT )*
+   :   LETTER ( '_' ( LETTER | DIGIT ) | LETTER | DIGIT )*
    ;
-   
+
 EXTENDED_IDENTIFIER
   : '\\' ( 'a'..'z' | '0'..'9' | '&' | '\'' | '(' | ')'
     | '+' | ',' | '-' | '.' | '/' | ':' | ';' | '<' | '=' | '>' | '|'
@@ -1609,31 +1601,31 @@ EXTENDED_IDENTIFIER
     | '#' | '[' | ']' | '_' )+ '\\'
   ;
 
-LETTER	
+LETTER
   :  'a'..'z' | 'A'..'Z'
   ;
 
 COMMENT
-  : '--' ( ~'\n' )* 
+  : '--' ( ~'\n' )*
   -> skip
   ;
 
 TAB
-  : ( '\t' )+ -> skip 
+  : ( '\t' )+ -> skip
   ;
 
 SPACE
-  : ( ' ' )+ -> skip 
+  : ( ' ' )+ -> skip
   ;
 
 NEWLINE
-  : '\n' -> skip 
+  : '\n' -> skip
   ;
 
 CR
-  : '\r' -> skip 
+  : '\r' -> skip
   ;
-  
+
 CHARACTER_LITERAL
    : APOSTROPHE . APOSTROPHE
    ;
@@ -1667,7 +1659,7 @@ ARROW         : '=>'  ;
 NEQ           : '/='  ;
 VARASGN       : ':='  ;
 BOX           : '<>'  ;
-DBLQUOTE      : '\"'  ;
+DBLQUOTE      : '"'   ;
 SEMI          : ';'   ;
 COMMA         : ','   ;
 AMPERSAND     : '&'   ;
@@ -1686,25 +1678,32 @@ EQ            : '='   ;
 BAR           : '|'   ;
 DOT           : '.'   ;
 BACKSLASH     : '\\'  ;
-  
+
 
 EXPONENT
-  :  'e' ( '+' | '-' )? INTEGER
+  :  ('E'|'e') ( '+' | '-' )? INTEGER
   ;
 
 
 HEXDIGIT
     :	('A'..'F'|'a'..'f')
     ;
-      
+
 
 INTEGER
   :  DIGIT ( '_' | DIGIT )*
   ;
 
-  
  DIGIT
   :  '0'..'9'
+  ;
+
+BASED_INTEGER
+  : EXTENDED_DIGIT ('_' | EXTENDED_DIGIT)*
+  ;
+
+EXTENDED_DIGIT
+  : (DIGIT | LETTER)
   ;
 
 APOSTROPHE

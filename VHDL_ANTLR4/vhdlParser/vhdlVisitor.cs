@@ -338,7 +338,7 @@ namespace VHDL_ANTLR4
                 var range_constraint = constraint_in.range_constraint();
                 if (range_constraint != null)
                 {
-                    RangeProvider range = ParseExtention.Parse<vhdlParser.RangeContext, RangeProvider>(range_constraint.range(), VisitRange);
+                    RangeProvider range = ParseExtention.Parse<vhdlParser.Range_declContext, RangeProvider>(range_constraint.range_decl(), VisitRange_decl);
                     res = new VHDL.type.RangeSubtypeIndication(res, range);
                 }
 
@@ -741,9 +741,9 @@ namespace VHDL_ANTLR4
         /// <return>The visitor VhdlElement.</return>
         public override VhdlElement VisitRange_constraint([NotNull] vhdlParser.Range_constraintContext context)
         {
-            var range_in = context.range();
+            var range_in = context.range_decl();
 
-            VHDL.Range range = ParseExtention.Parse<vhdlParser.RangeContext, Range>(range_in, VisitRange);
+            VHDL.Range range = ParseExtention.Parse<vhdlParser.Range_declContext, Range>(range_in, VisitRange_decl);
 
             VHDL.type.ISubtypeIndication range_from_type = range.From.Type;
             VHDL.type.ISubtypeIndication range_to_type = range.To.Type;
@@ -2251,12 +2251,12 @@ namespace VHDL_ANTLR4
         /// <return>The visitor VhdlElement.</return>
         public override VhdlElement VisitDiscrete_range([NotNull] vhdlParser.Discrete_rangeContext context)
         {
-            var range = context.range();
+            var range = context.range_decl();
             var subtype_indication_in = context.subtype_indication();
 
             if (range != null)
             {
-                return VisitRange(range);
+                return VisitRange_decl(range);
             }
 
             if (subtype_indication_in != null)
@@ -2394,7 +2394,7 @@ namespace VHDL_ANTLR4
         /// </summary>
         /// <param name="context">The parse tree.</param>
         /// <return>The visitor VhdlElement.</return>
-        public override VhdlElement VisitRange([NotNull] vhdlParser.RangeContext context)
+        public override VhdlElement VisitRange_decl([NotNull] vhdlParser.Range_declContext context)
         {
             RangeProvider res = null;
 
@@ -2557,7 +2557,7 @@ namespace VHDL_ANTLR4
 
             string base_unit_name = base_unit_declaration_in.identifier().GetText();
 
-            VHDL.Range range = ParseExtention.Parse<vhdlParser.RangeContext, VHDL.Range>(range_constraint_in.range(), VisitRange);
+            VHDL.Range range = ParseExtention.Parse<vhdlParser.Range_declContext, VHDL.Range>(range_constraint_in.range_decl(), VisitRange_decl);
 
             VHDL.type.PhysicalType pt = new VHDL.type.PhysicalType("unknown", range, base_unit_name);
             pt.createUnit(base_unit_name);

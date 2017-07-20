@@ -105,37 +105,67 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="grammar\vhdl.new.g4" />
-    <None Include="Libraries\ieee\arith.vhd">
+    <None Include="Libraries\ieee\2008\fixed_float_types_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\misc.vhd">
+    <None Include="Libraries\ieee\2008\fixed_generic_pkg-body_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\numeric_bit-body.vhd">
+    <None Include="Libraries\ieee\2008\fixed_generic_pkg_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\numeric_bit.vhd">
+    <None Include="Libraries\ieee\2008\fixed_pkg_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\numeric_std-body.vhd">
+    <None Include="Libraries\ieee\2008\float_generic_pkg-body_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\numeric_std.vhd">
+    <None Include="Libraries\ieee\2008\float_generic_pkg_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\signed.vhd">
+    <None Include="Libraries\ieee\2008\float_pkg_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\std_logic_1164.vhd">
+    <None Include="Libraries\ieee\2008\ieee_bit_context_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\std_logic_1164_body.vhd">
+    <None Include="Libraries\ieee\2008\ieee_std_context_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\textio.vhd">
+    <None Include="Libraries\ieee\2008\math_complex-body_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Libraries\ieee\unsigned.vhd">
+    <None Include="Libraries\ieee\2008\math_complex_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\math_real-body_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\math_real_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\numeric_bit-body_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\numeric_bit_unsigned-body_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\numeric_bit_unsigned_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\numeric_bit_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\numeric_std_unsigned_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\numeric_std_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\std_logic_1164_vhdl2008.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\2008\std_logic_textio_vhdl2008.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Libraries\std\standard.vhd">
