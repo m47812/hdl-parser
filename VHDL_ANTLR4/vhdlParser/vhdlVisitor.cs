@@ -805,7 +805,7 @@ namespace VHDL_ANTLR4
                 throw new System.NotSupportedException(string.Format("Could not analyse item {0}. Amount of relations is 0", context.ToStringTree()));
             }
 
-            Expression res = parsed_relations[0]; ;
+            Expression res = parsed_relations[0]; 
 
             for (int i = 0; i < logical_operators_in.Length; i++)
             {
@@ -1149,16 +1149,16 @@ namespace VHDL_ANTLR4
             VhdlElement result = null;
 
             if (relational_operator_in != null)
-                VHDL.parser.antlr.TemporaryName.ExprContext.Push(null); // relation context is ambigous
-
-            Expression parsed_shift_expression_1 = ParseExtention.Parse<vhdlParser.Shift_expressionContext, Expression>(shift_expressions_in[0], VisitShift_expression);
+                VHDL.parser.antlr.TemporaryName.ExprContext.Push(null); // relation context is ambiguous
 
             if (relational_operator_in == null)
             {
+                Expression parsed_shift_expression_1 = ParseExtention.Parse<vhdlParser.Shift_expressionContext, Expression>(shift_expressions_in[0], VisitShift_expression);
                 result = parsed_shift_expression_1;
             }
             else
             {
+                Expression parsed_shift_expression_1 = ParseExtention.Parse<vhdlParser.Shift_expressionContext, Expression>(shift_expressions_in[0], VisitShift_expression);
                 Expression parsed_shift_expression_2 = ParseExtention.Parse<vhdlParser.Shift_expressionContext, Expression>(shift_expressions_in[1], VisitShift_expression);
 
                 if (relational_operator_in.EQ() != null)
