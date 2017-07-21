@@ -104,6 +104,9 @@
     <Compile Include="VHDL_Library_Manager\VHDL_Library_Manager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Libraries\ieee\add_pkg.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Libraries\ieee\arith.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -125,10 +128,16 @@
     <None Include="Libraries\ieee\signed.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Libraries\ieee\standard.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Libraries\ieee\std_logic_1164.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Libraries\ieee\std_logic_1164_body.vhd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\ieee\std_logic_textio.vhd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Libraries\ieee\textio.vhd">
