@@ -93,8 +93,8 @@
     <Compile Include="vhdlParser\vhdlListener.cs" />
     <Compile Include="vhdlParser\VhdlParserWrapper.cs" />
     <Compile Include="vhdlParser\VhdlParserSettings.cs" />
-    <Compile Include="vhdlParser\vhdlVisitor.cs" />
     <Compile Include="vhdlParser\vhdlAbstractVisitor.cs" />
+    <Compile Include="vhdlParser\vhdlVisitor.cs" />
     <Compile Include="VHDL_Library_Manager\ArchitectureInfo.cs" />
     <Compile Include="VHDL_Library_Manager\LibraryFileInfo.cs" />
     <Compile Include="VHDL_Library_Manager\LibraryInfo.cs" />

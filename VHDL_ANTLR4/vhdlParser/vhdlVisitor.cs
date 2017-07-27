@@ -338,7 +338,7 @@ namespace VHDL_ANTLR4
                 var range_constraint = constraint_in.range_constraint();
                 if (range_constraint != null)
                 {
-                    RangeProvider range = ParseExtention.Parse<vhdlParser.Range_declContext, RangeProvider>(range_constraint.range_decl(), VisitRange_decl);
+                    RangeProvider range = ParseExtention.Parse<vhdlParser.RangeContext, RangeProvider>(range_constraint.range(), VisitRange);
                     res = new VHDL.type.RangeSubtypeIndication(res, range);
                 }
 
@@ -741,9 +741,9 @@ namespace VHDL_ANTLR4
         /// <return>The visitor VhdlElement.</return>
         public override VhdlElement VisitRange_constraint([NotNull] vhdlParser.Range_constraintContext context)
         {
-            var range_in = context.range_decl();
+            var range_in = context.range();
 
-            VHDL.Range range = ParseExtention.Parse<vhdlParser.Range_declContext, Range>(range_in, VisitRange_decl);
+            VHDL.Range range = ParseExtention.Parse<vhdlParser.RangeContext, Range>(range_in, VisitRange);
 
             VHDL.type.ISubtypeIndication range_from_type = range.From.Type;
             VHDL.type.ISubtypeIndication range_to_type = range.To.Type;
@@ -1495,16 +1495,16 @@ namespace VHDL_ANTLR4
 
         private Name TemporaryVisitFirstNamePart(vhdlParser.Name_partContext name_part_in)
         {
-            if (name_part_in.name_function_call_or_indexed_part() != null)
+            if (name_part_in.name_part_specificator().name_function_call_or_indexed_part() != null)
                 return TemporaryVisitFirstIndiciesNamePart(name_part_in);
 
             List<VHDL.parser.antlr.Part> parts = TemporaryNameSelectedPart(name_part_in);
             VHDL.parser.antlr.TemporaryName tm = ParseExtention.Parse<vhdlParser.Selected_nameContext, VHDL.parser.antlr.TemporaryName>(name_part_in.selected_name(), VisitSelected_name);
             Name res = tm.GetName();
 
-            if (name_part_in.name_slice_part() != null)
+            if (name_part_in.name_part_specificator().name_slice_part() != null)
                 return TemporaryVisitSliceNamePart(name_part_in, res);
-            if (name_part_in.name_attribute_part() != null)
+            if (name_part_in.name_part_specificator().name_attribute_part() != null)
                 return TemporaryVisitAttributeNamePart(name_part_in, res);
 
 
@@ -1522,11 +1522,11 @@ namespace VHDL_ANTLR4
                 //res = new SelectedName(res, (p as VHDL.parser.antlr.Part.SelectedPart).Suffix);
             }
 
-            if (name_part_in.name_function_call_or_indexed_part() != null)
+            if (name_part_in.name_part_specificator().name_function_call_or_indexed_part() != null)
                 return TemporaryVisitIndiciesNamePart(name_part_in, res);
-            if (name_part_in.name_slice_part() != null)
+            if (name_part_in.name_part_specificator().name_slice_part() != null)
                 return TemporaryVisitSliceNamePart(name_part_in, res);
-            if (name_part_in.name_attribute_part() != null)
+            if (name_part_in.name_part_specificator().name_attribute_part() != null)
                 return TemporaryVisitAttributeNamePart(name_part_in, res);
 
             return res;
@@ -1534,11 +1534,11 @@ namespace VHDL_ANTLR4
 
         private Name TemporaryVisitAttributeNamePart(vhdlParser.Name_partContext name_part_in, Name prefix)
         {
-            string attributeName = name_part_in.name_attribute_part().attribute_designator().GetText();
+            string attributeName = name_part_in.name_part_specificator().name_attribute_part().attribute_designator().GetText();
             Attribute standard_attribute = Attribute.GetStandardAttribute(attributeName);
             Attribute attribute = (standard_attribute == null) ? resolve<Attribute>(attributeName) : standard_attribute;
 
-            List<Expression> expressions = ParseExtention.ParseList<vhdlParser.ExpressionContext, Expression>(name_part_in.name_attribute_part().expression(), VisitExpression);
+            List<Expression> expressions = ParseExtention.ParseList<vhdlParser.ExpressionContext, Expression>(name_part_in.name_part_specificator().name_attribute_part().expression(), VisitExpression);
             Name res = new AttributeName(prefix, attribute, expressions);
             return res;
         }
@@ -1558,7 +1558,7 @@ namespace VHDL_ANTLR4
 
                 int i = 0;
                 List<AssociationElement> arguments = ParseExtention.ParseList<vhdlParser.Association_elementContext, AssociationElement>(
-                    name_part_in.name_function_call_or_indexed_part().actual_parameter_part().association_list().association_element(),
+                    name_part_in.name_part_specificator().name_function_call_or_indexed_part().actual_parameter_part().association_list().association_element(),
                     x =>
                     {
                         VHDL.parser.antlr.TemporaryName.ExprContext.Push(objs[i++]);
@@ -1573,7 +1573,7 @@ namespace VHDL_ANTLR4
             }
             else
             {
-                List<Expression> expressions = TemporaryIndiciesNamePartExpressions(name_part_in.name_function_call_or_indexed_part().actual_parameter_part());
+                List<Expression> expressions = TemporaryIndiciesNamePartExpressions(name_part_in.name_part_specificator().name_function_call_or_indexed_part().actual_parameter_part());
                 Name base_name = tm.GetName();
                 IndexedName ae = new IndexedName(base_name, expressions);
                 Name res = ae;
@@ -1584,7 +1584,7 @@ namespace VHDL_ANTLR4
         private Name TemporaryVisitIndiciesNamePart(vhdlParser.Name_partContext name_part_in, Name previousName)
         {
             Name res = previousName;
-            List<Expression> expressions = TemporaryIndiciesNamePartExpressions(name_part_in.name_function_call_or_indexed_part().actual_parameter_part());
+            List<Expression> expressions = TemporaryIndiciesNamePartExpressions(name_part_in.name_part_specificator().name_function_call_or_indexed_part().actual_parameter_part());
             res = new IndexedName(res, expressions);
             return res;
         }
@@ -1593,7 +1593,7 @@ namespace VHDL_ANTLR4
         {
             Name res = previousName;
             List<DiscreteRange> ranges = new List<DiscreteRange>();
-            ranges.AddRange(ParseExtention.ParseList<vhdlParser.Explicit_rangeContext, Range>(name_part_in.name_slice_part().explicit_range(), VisitExplicit_range));
+            ranges.AddRange(ParseExtention.ParseList<vhdlParser.Explicit_rangeContext, Range>(name_part_in.name_part_specificator().name_slice_part().explicit_range(), VisitExplicit_range));
             res = new Slice(res, ranges);
             return res;
         }
@@ -2251,12 +2251,12 @@ namespace VHDL_ANTLR4
         /// <return>The visitor VhdlElement.</return>
         public override VhdlElement VisitDiscrete_range([NotNull] vhdlParser.Discrete_rangeContext context)
         {
-            var range = context.range_decl();
+            var range = context.range();
             var subtype_indication_in = context.subtype_indication();
 
             if (range != null)
             {
-                return VisitRange_decl(range);
+                return VisitRange(range);
             }
 
             if (subtype_indication_in != null)
@@ -2394,7 +2394,7 @@ namespace VHDL_ANTLR4
         /// </summary>
         /// <param name="context">The parse tree.</param>
         /// <return>The visitor VhdlElement.</return>
-        public override VhdlElement VisitRange_decl([NotNull] vhdlParser.Range_declContext context)
+        public override VhdlElement VisitRange([NotNull] vhdlParser.RangeContext context)
         {
             RangeProvider res = null;
 
@@ -2557,7 +2557,7 @@ namespace VHDL_ANTLR4
 
             string base_unit_name = base_unit_declaration_in.identifier().GetText();
 
-            VHDL.Range range = ParseExtention.Parse<vhdlParser.Range_declContext, VHDL.Range>(range_constraint_in.range_decl(), VisitRange_decl);
+            VHDL.Range range = ParseExtention.Parse<vhdlParser.RangeContext, VHDL.Range>(range_constraint_in.range(), VisitRange);
 
             VHDL.type.PhysicalType pt = new VHDL.type.PhysicalType("unknown", range, base_unit_name);
             pt.createUnit(base_unit_name);

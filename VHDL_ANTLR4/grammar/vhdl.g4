@@ -188,14 +188,14 @@ actual_part
   | actual_designator
   ;
 
-adding_operator
-  : PLUS
+adding_operator :
+    PLUS
   | MINUS
   | AMPERSAND
   ;
 
-aggregate
-  : LPAREN element_association ( COMMA element_association )* RPAREN
+aggregate :
+  LPAREN element_association ( COMMA element_association )* RPAREN
   ;
 
 alias_declaration
@@ -495,8 +495,8 @@ configuration_specification
   : FOR component_specification binding_indication SEMI
   ;
 
-constant_declaration
-  : CONSTANT identifier_list COLON subtype_indication
+constant_declaration :
+  CONSTANT identifier_list COLON subtype_indication
     ( VARASGN expression )? SEMI
   ;
 
@@ -513,8 +513,8 @@ constraint
   | index_constraint
   ;
 
-context_clause
-  : ( context_item )*
+context_clause :
+  ( context_item )*
   ;
 
 context_item
@@ -531,17 +531,17 @@ design_file
   : ( design_unit )* EOF
   ;
 
-design_unit
-  : context_clause library_unit
+design_unit :
+  context_clause library_unit
   ;
 
-designator
-  : identifier
+designator :
+    identifier
   | STRING_LITERAL
   ;
 
-direction
-  : TO
+direction :
+    TO
   | DOWNTO
   ;
 
@@ -550,7 +550,7 @@ disconnection_specification
   ;
 
 discrete_range
-  : range_decl
+  : range
   | subtype_indication
   ;
 
@@ -693,11 +693,11 @@ exit_statement
 // NOTE that NAND/NOR are in (...)* now (used to be in (...)?).
 // (21.1.2004, e.f.)
 expression
-  : relation ( options{greedy=true;}: logical_operator relation )*
+  : relation ( : logical_operator relation )*
   ;
 
 factor
-  : primary ( options{greedy=true;}: DOUBLESTAR primary )?
+  : primary ( : DOUBLESTAR primary )?
   | ABS primary
   | NOT primary
   ;
@@ -780,8 +780,8 @@ guarded_signal_specification
   : signal_list COLON name
   ;
 
-identifier
-  : BASIC_IDENTIFIER
+identifier :
+    BASIC_IDENTIFIER
   | EXTENDED_IDENTIFIER
   ;
 
@@ -789,8 +789,8 @@ identifier_list
   : identifier ( COMMA identifier )*
   ;
 
-if_statement
-  : ( label_colon )? IF condition THEN
+if_statement :
+    ( label_colon )? IF condition THEN
     sequence_of_statements
     ( ELSIF condition THEN sequence_of_statements )*
     ( ELSE sequence_of_statements )?
@@ -827,9 +827,9 @@ interface_constant_declaration
     ( VARASGN expression )?
   ;
 
-interface_declaration
-  :  interface_constant_declaration
-  |  interface_signal_declaration
+interface_declaration :
+    interface_constant_declaration
+  | interface_signal_declaration
   | interface_variable_declaration
   | interface_file_declaration
   | interface_terminal_declaration
@@ -866,8 +866,8 @@ interface_port_declaration
     ( BUS )? ( VARASGN expression )?
   ;
 
-interface_signal_declaration
-  : SIGNAL identifier_list COLON ( signal_mode )? subtype_indication
+interface_signal_declaration :
+   SIGNAL identifier_list COLON (IN|OUT|INOUT)? subtype_indication
     ( BUS )? ( VARASGN expression )?
   ;
 
@@ -922,8 +922,8 @@ logical_operator
   | XNOR
   ;
 
-loop_statement
-  : ( label_colon )? ( iteration_scheme )?
+loop_statement :
+    ( label_colon )? ( iteration_scheme )?
     LOOP
     sequence_of_statements
     END LOOP ( identifier )? SEMI
@@ -963,7 +963,13 @@ name
   ;
 
 name_part
-   : selected_name (name_attribute_part | name_function_call_or_indexed_part | name_slice_part)?
+   : selected_name (name_part_specificator)?
+   ;
+
+name_part_specificator
+   : name_attribute_part
+   | name_function_call_or_indexed_part
+   | name_slice_part
    ;
 
 name_attribute_part
@@ -975,11 +981,11 @@ name_function_call_or_indexed_part
    ;
 
 name_slice_part
-   : ( LPAREN explicit_range ( COMMA explicit_range )* RPAREN )+
+   : LPAREN explicit_range ( COMMA explicit_range )* RPAREN
    ;
 
-selected_name
-   : identifier (DOT suffix)*
+selected_name :
+   identifier (DOT suffix)*
    ;
 
 
@@ -1078,7 +1084,7 @@ parameter_specification
   ;
 
 physical_literal
-  : abstract_literal (options{greedy=true;}: identifier)
+  : abstract_literal (: identifier)
   ;
 
 physical_type_definition
@@ -1198,17 +1204,17 @@ quantity_specification
   : quantity_list COLON name
   ;
 
-range_decl
+range
   : explicit_range
   | name
   ;
 
 explicit_range
-  : simple_expression ( direction simple_expression )?
+  : simple_expression direction simple_expression
   ;
 
 range_constraint
-  : RANGE range_decl
+  : RANGE range
   ;
 
 record_nature_definition
@@ -1223,7 +1229,7 @@ record_type_definition
 
 relation
   : shift_expression
-    ( options{greedy=true;}: relational_operator shift_expression )?
+    ( : relational_operator shift_expression )?
   ;
 
 relational_operator
@@ -1282,8 +1288,8 @@ sequence_of_statements
   : ( sequential_statement )*
   ;
 
-sequential_statement
-  : wait_statement
+sequential_statement :
+    wait_statement
   | assertion_statement
   | report_statement
   | signal_assignment_statement
@@ -1301,7 +1307,7 @@ sequential_statement
 
 shift_expression
   : simple_expression
-    ( options{greedy=true;}: shift_operator simple_expression )?
+    ( : shift_operator simple_expression )?
   ;
 
 shift_operator
@@ -1313,8 +1319,8 @@ shift_operator
   | ROR
   ;
 
-signal_assignment_statement
-  : ( label_colon )?
+signal_assignment_statement :
+   ( label_colon )?
     target LE ( delay_mechanism )? waveform SEMI
   ;
 
@@ -1342,7 +1348,7 @@ signature
 // `a op -b' - use `a op (-b)' instead).
 // (3.2.2004, e.f.)
 simple_expression
-  : ( PLUS | MINUS )? term ( options{greedy=true;}: adding_operator term )*
+  : ( PLUS | MINUS )? term ( : adding_operator term )*
   ;
 
 simple_simultaneous_statement
@@ -1409,8 +1415,8 @@ subnature_indication
     ( TOLERANCE expression ACROSS expression THROUGH )?
   ;
 
-subprogram_body
-  : subprogram_specification IS
+subprogram_body :
+    subprogram_specification IS
     subprogram_declarative_part
     BEGIN
     subprogram_statement_part
@@ -1471,12 +1477,12 @@ subtype_declaration
 // VHDLAMS 1076.1-1999 declares first name as optional. Here, second name
 // is made optional to prevent antlr nondeterminism.
 // (9.2.2004, e.f.)
-subtype_indication
-  : selected_name ( selected_name )? ( constraint )? ( tolerance_aspect )?
+subtype_indication :
+   selected_name ( selected_name )? ( constraint )? ( tolerance_aspect )?
   ;
 
-suffix
-  : identifier
+suffix :
+    identifier
   | CHARACTER_LITERAL
   | STRING_LITERAL
   | ALL
@@ -1488,7 +1494,7 @@ target
   ;
 
 term
-  : factor ( options{greedy=true;}: multiplying_operator factor )*
+  : factor ( : multiplying_operator factor )*
   ;
 
 terminal_aspect
@@ -1536,12 +1542,12 @@ use_clause
   : USE selected_name ( COMMA selected_name )* SEMI
   ;
 
-variable_assignment_statement
-  : ( label_colon )? target VARASGN expression SEMI
+variable_assignment_statement :
+  ( label_colon )? target VARASGN expression SEMI
   ;
 
-variable_declaration
-  : ( SHARED )? VARIABLE identifier_list COLON
+variable_declaration :
+    ( SHARED )? VARIABLE identifier_list COLON
     subtype_indication ( VARASGN expression )? SEMI
   ;
 
@@ -1550,13 +1556,13 @@ wait_statement
     ( condition_clause )? ( timeout_clause )? SEMI
   ;
 
-waveform
-  : waveform_element ( COMMA waveform_element )*
+waveform :
+    waveform_element ( COMMA waveform_element )*
   | UNAFFECTED
   ;
 
-waveform_element
-  : expression ( AFTER expression )?
+waveform_element :
+   expression ( AFTER expression )?
   ;
 
 //------------------------------------------Lexer-----------------------------------------
@@ -1577,15 +1583,15 @@ BIT_STRING_LITERAL
   ;
 
 BIT_STRING_LITERAL_BINARY
-    :   ('b'|'B') '"' ('1' | '0' | '_')+ '"'
+    :   ('b'|'B') '\"' ('1' | '0' | '_')+ '\"'
     ;
 
 BIT_STRING_LITERAL_OCTAL
-    :   ('o'|'O') '"' ('7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '"'
+    :   ('o'|'O') '\"' ('7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '\"'
     ;
 
 BIT_STRING_LITERAL_HEX
-    :   ('x'|'X') '"' ( 'f' |'e' |'d' |'c' |'b' |'a' | 'F' |'E' |'D' |'C' |'B' |'A' | '9' | '8' | '7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '"'
+    :   ('x'|'X') '\"' ( 'f' |'e' |'d' |'c' |'b' |'a' | 'F' |'E' |'D' |'C' |'B' |'A' | '9' | '8' | '7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '\"'
     ;
 
 REAL_LITERAL
@@ -1660,7 +1666,7 @@ ARROW         : '=>'  ;
 NEQ           : '/='  ;
 VARASGN       : ':='  ;
 BOX           : '<>'  ;
-DBLQUOTE      : '"'   ;
+DBLQUOTE      : '\"'  ;
 SEMI          : ';'   ;
 COMMA         : ','   ;
 AMPERSAND     : '&'   ;
